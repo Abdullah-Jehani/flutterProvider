@@ -19,40 +19,74 @@ class _ProviderWidgetState extends State<ProviderWidget> {
             title: const Text('Provider'),
             backgroundColor: Colors.blue,
           ),
-          body: Consumer<Model>(builder: (context, model, child) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    model.name,
-                    style: const TextStyle(fontSize: 18),
+          body: Selector<Model, int>(
+              selector: (context, getmodel) => getmodel.getName1,
+              builder: (context, model, child) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("$model"),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Consumer<Model>(builder: (context, model, child) {
+                        return MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            model.changename1();
+                          },
+                          child: const Text(
+                            'Do SomeThing1',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      }),
+                      Selector<Model, int>(
+                        selector: (context, getmodel2) => getmodel2.getName2,
+                        builder: (context, model, child) {
+                          return Text(
+                            "$model",
+                            style: const TextStyle(fontSize: 18),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Consumer<Model>(builder: (context, model, child) {
+                        return MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            model.changename2();
+                          },
+                          child: const Text(
+                            'Do SomeThing2',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      })
+                    ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  MaterialButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      model.changename();
-                    },
-                    child: const Text(
-                      'Do SomeThing',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          })),
+                );
+              })),
     );
   }
 }
 
 class Model extends ChangeNotifier {
-  String name = 'Khalid';
-  changename() {
-    name = 'Osama';
+  var name1 = 1;
+  var name2 = 1;
+  get getName1 => name1;
+  get getName2 => name2;
+
+  changename1() {
+    name1++;
+    notifyListeners();
+  }
+
+  changename2() {
+    name2--;
     notifyListeners();
   }
 }
